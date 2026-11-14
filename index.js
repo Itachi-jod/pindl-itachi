@@ -1,7 +1,6 @@
-
 const { pinterest } = require("btch-downloader");
 
-const AUTHOR = "Itachi";
+const AUTHOR = "MinatoCode";
 
 // Pretty JSON response
 function pretty(data) {
@@ -30,30 +29,38 @@ function replaceDeveloper(obj) {
   return obj;
 }
 
-function keepOriginalSearchImages(data) {
-  const searchResults = data?.result?.result;
+// Keep only images.original in search results
+function cleanSearch(data) {
+  data = replaceDeveloper(data);
 
-  if (!Array.isArray(searchResults)) {
-    return data;
+  if (
+    data?.result?.result &&
+    Array.isArray(data.result.result)
+  ) {
+    data.result.result = data.result.result.map(item => {
+      const original = item.images?.original;
+
+      return {
+        ...item,
+        images: original ? { original } : {}
+      };
+    });
   }
 
-  return {
-    ...data,
-    result: {
-      ...data.result,
-      result: searchResults.map((pin) => {
-        if (!pin || typeof pin !== "object" || !pin.images) {
-          return pin;
-        }
+  return data;
+}
 
-        const original = pin.images.original;
-        return {
-          ...pin,
-          images: typeof original === "string" ? { original } : {}
-        };
-      })
-    }
-  };
+// Add downloadUrl from result.image
+function formatDownload(data) {
+  data = replaceDeveloper(data);
+
+  const downloadUrl = data?.result?.image;
+
+  if (data?.result && downloadUrl) {
+    data.result.downloadUrl = downloadUrl;
+  }
+
+  return data;
 }
 
 module.exports = async (req, res) => {
@@ -63,6 +70,7 @@ module.exports = async (req, res) => {
     return res.status(status).send(pretty(data));
   };
 
+  // GET only
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
 
@@ -89,14 +97,9 @@ module.exports = async (req, res) => {
 
     try {
       const data = await pinterest(url);
-      const response = replaceDeveloper(data);
-      const result = response?.result;
 
-      if (result && typeof result === "object" && typeof result.image === "string") {
-        result.downloadUrl = result.image;
-      }
+      return send(200, formatDownload(data));
 
-      return send(200, response);
     } catch (error) {
       return send(500, {
         developer: AUTHOR,
@@ -121,7 +124,9 @@ module.exports = async (req, res) => {
 
     try {
       const data = await pinterest(query);
-      return send(200, keepOriginalSearchImages(replaceDeveloper(data)));
+
+      return send(200, cleanSearch(data));
+
     } catch (error) {
       return send(500, {
         developer: AUTHOR,
@@ -143,4 +148,3 @@ module.exports = async (req, res) => {
     ]
   });
 };
-    
