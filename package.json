@@ -1,11 +1,14 @@
-
 {
-  "name": "pinterest-search-api",
+  "name": "pinterest-api",
   "version": "1.0.0",
-  "description": "Pinterest Search API",
-  "main": "api/search.js",
-  "type": "commonjs",
+  "description": "Pinterest Search and Downloader API by MinatoCode",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Itachi9nxide",
+  "license": "ISC",
   "dependencies": {
-    "btch-downloader": "latest"
+    "btch-downloader": "^2.4.12"
   }
 }
