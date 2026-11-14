@@ -1,6 +1,6 @@
 const { pinterest } = require("btch-downloader");
 
-const AUTHOR = "MinatoCode";
+const AUTHOR = "MinatoCodes";
 
 module.exports = async (req, res) => {
   const send = (status, data) => {
