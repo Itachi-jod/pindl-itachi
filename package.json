@@ -1,16 +1,11 @@
 
 {
-  "name": "itachi-pinterestdl-api",
+  "name": "pinterest-search-api",
   "version": "1.0.0",
-  "description": "Pinterest Downloader and Search API",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
-  "engines": {
-    "node": ">=20"
-  },
+  "description": "Pinterest Search API",
+  "main": "api/search.js",
+  "type": "commonjs",
   "dependencies": {
-    "btch-downloader": "6.4.0"
+    "btch-downloader": "latest"
   }
 }
