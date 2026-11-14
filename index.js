@@ -30,6 +30,32 @@ function replaceDeveloper(obj) {
   return obj;
 }
 
+function keepOriginalSearchImages(data) {
+  const searchResults = data?.result?.result;
+
+  if (!Array.isArray(searchResults)) {
+    return data;
+  }
+
+  return {
+    ...data,
+    result: {
+      ...data.result,
+      result: searchResults.map((pin) => {
+        if (!pin || typeof pin !== "object" || !pin.images) {
+          return pin;
+        }
+
+        const original = pin.images.original;
+        return {
+          ...pin,
+          images: typeof original === "string" ? { original } : {}
+        };
+      })
+    }
+  };
+}
+
 module.exports = async (req, res) => {
   res.setHeader("Content-Type", "application/json");
 
@@ -63,7 +89,14 @@ module.exports = async (req, res) => {
 
     try {
       const data = await pinterest(url);
-      return send(200, replaceDeveloper(data));
+      const response = replaceDeveloper(data);
+      const result = response?.result;
+
+      if (result && typeof result === "object" && typeof result.image === "string") {
+        result.downloadUrl = result.image;
+      }
+
+      return send(200, response);
     } catch (error) {
       return send(500, {
         developer: AUTHOR,
@@ -88,7 +121,7 @@ module.exports = async (req, res) => {
 
     try {
       const data = await pinterest(query);
-      return send(200, replaceDeveloper(data));
+      return send(200, keepOriginalSearchImages(replaceDeveloper(data)));
     } catch (error) {
       return send(500, {
         developer: AUTHOR,
