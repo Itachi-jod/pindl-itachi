@@ -3,7 +3,7 @@ const { pinterest } = require("btch-downloader");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const AUTHOR = "MinatoCode";
+const AUTHOR = "Itachi";
 
 // Pretty-print all JSON responses automatically
 app.set("json spaces", 2);
@@ -87,8 +87,7 @@ app.get(["/api/pindl", "/pindl"], async (req, res) => {
       return res.status(404).json({
         success: false,
         author: AUTHOR,
-        pinterestUrl: pinUrl,
-        error: "Image URL not found"
+        pinterestUrl: pinUrl
       });
     }
 
