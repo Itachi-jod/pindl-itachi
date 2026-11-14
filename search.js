@@ -1,4 +1,3 @@
-
 const { pinterest } = require("btch-downloader");
 
 const AUTHOR = "MinatoCode";
@@ -31,17 +30,23 @@ module.exports = async (req, res) => {
 
     const data = await pinterest(query);
 
-    const results = data?.result?.result || data?.result || [];
+    // Safely drill down to the array across different wrapper/package structures
+    const results =
+      data?.result?.result?.result ||
+      data?.result?.result ||
+      data?.result ||
+      [];
 
     const images = Array.isArray(results)
       ? results
-          .map(item => item?.images?.original)
+          .map(item => item?.images?.original || item?.image_url)
           .filter(Boolean)
       : [];
 
     return send(200, {
       success: images.length > 0,
       author: AUTHOR,
+      count: images.length,
       images
     });
 
