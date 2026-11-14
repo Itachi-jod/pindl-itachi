@@ -6,9 +6,10 @@
   "scripts": {
     "start": "node index.js"
   },
-  "author": "Itachi9nxide",
+  "author": "Itachi",
   "license": "ISC",
   "dependencies": {
-    "btch-downloader": "^2.4.12"
+    "btch-downloader": "latest",
+    "express": "latest"
   }
 }
