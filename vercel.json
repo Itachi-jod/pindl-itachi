@@ -1,16 +1,31 @@
-
 {
   "version": 2,
   "builds": [
     {
       "src": "search.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "pindl.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "index.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/api/search",
       "dest": "/search.js"
+    },
+    {
+      "src": "/api/pindl",
+      "dest": "/pindl.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.js"
     }
   ]
 }
